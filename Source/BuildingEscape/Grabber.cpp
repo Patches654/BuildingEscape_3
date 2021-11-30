@@ -1,7 +1,14 @@
 // Houlihan
 
-
 #include "Grabber.h"
+#include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
+#include "Math/Vector.h"
+
+
+// Does nothing, but helps us read the code, regarding out perameters...
+#define OUT
+
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -19,8 +26,8 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// This is what happens at when the game begins...
-	
+	UE_LOG(LogTemp, Warning, TEXT("Grabber is Working, Sortof..."));
+
 }
 
 
@@ -29,6 +36,21 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
-}
+	// get players viewpoint
 
+	// This is an out perameter, we create to a variable, the GetPlayerViewPoint, modifies the variables. 
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		OUT PlayerViewPointLocation, 
+		OUT PlayerViewPointRotation);
+	
+	UE_LOG(LogTemp, Warning, TEXT("ViewLocation: %s, ViewRotation: %s"), 
+		*PlayerViewPointLocation.ToString(),
+		*PlayerViewPointRotation.ToString()
+		);
+
+
+	// ray-cast out to the certain distance (reach)
+	// see what it hits
+}

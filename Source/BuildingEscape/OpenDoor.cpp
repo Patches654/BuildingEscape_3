@@ -5,6 +5,7 @@
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Actor.h"
 
+
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
 {
@@ -64,17 +65,17 @@ void UOpenDoor::OpenDoor(float DeltaTime)
 	FRotator DoorRotation = GetOwner()->GetActorRotation();
 	DoorRotation.Yaw = FMath::FInterpTo(DoorRotation.Yaw, DoorOpenTargetAngle, DeltaTime, DoorOpenVelocity);
 	GetOwner()->SetActorRotation(DoorRotation);
-	UE_LOG(LogTemp, Warning, TEXT("%f DoorRotation, %f Target"), DoorRotation.Yaw, DoorOpenTargetAngle);
+	// UE_LOG(LogTemp, Warning, TEXT("%f DoorRotation, %f Target"), DoorRotation.Yaw, DoorOpenTargetAngle);
 
 }
 
 void UOpenDoor::CloseDoor(float DeltaTime)
 {
-	UE_LOG(LogTemp, Warning, TEXT("This is the closed Door Function"))
+	// Closes the door
 	FRotator DoorRotation = GetOwner()->GetActorRotation();
 	DoorRotation.Yaw = FMath::FInterpTo(DoorRotation.Yaw, DoorCloseTargetAngle, DeltaTime, DoorCloseVelocity);
 	GetOwner()->SetActorRotation(DoorRotation);
-	UE_LOG(LogTemp, Warning, TEXT("%f DoorRotation, %f Target"), DoorRotation.Yaw, DoorCloseTargetAngle);
+	// UE_LOG(LogTemp, Warning, TEXT("%f DoorRotation, %f Target"), DoorRotation.Yaw, DoorCloseTargetAngle);
 }
 
 /*
