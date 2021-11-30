@@ -1,6 +1,7 @@
 // Houlihan
 
 #include "Grabber.h"
+#include "DrawDebugHelpers.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 #include "Math/Vector.h"
@@ -43,14 +44,24 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	FRotator PlayerViewPointRotation;
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
 		OUT PlayerViewPointLocation, 
-		OUT PlayerViewPointRotation);
+		OUT PlayerViewPointRotation
+	);
 	
-	UE_LOG(LogTemp, Warning, TEXT("ViewLocation: %s, ViewRotation: %s"), 
-		*PlayerViewPointLocation.ToString(),
-		*PlayerViewPointRotation.ToString()
-		);
+	// Creating the Vector, Converting the Rotation to a Vector and adding the two vectors together
+	FVector LineTraceEnd = PlayerViewPointLocation + (GrabberLength * PlayerViewPointRotation.Vector());
 
+	// Draw A debug line to check the resultant LineTraceEnd
+	DrawDebugLine(
+		GetWorld(), PlayerViewPointLocation, LineTraceEnd, 
+		FColor::Green, false, 0.f, 0, 5.f
+	);
+	
+	// UE_LOG(LogTemp, Warning, TEXT("ViewLocation: %s, ViewRotation: %s"), 
+	// 	*PlayerViewPointLocation.ToString(),
+	// 	*PlayerViewPointRotation.ToString()
+	// );
 
+	// draw a line from player showing the reach
 	// ray-cast out to the certain distance (reach)
 	// see what it hits
 }
