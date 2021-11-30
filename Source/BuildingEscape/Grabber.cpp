@@ -19,7 +19,7 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	// This is what happens at when the game begins...
 	
 }
 
