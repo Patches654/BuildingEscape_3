@@ -52,14 +52,35 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 	// Draw A debug line to check the resultant LineTraceEnd
 	DrawDebugLine(
-		GetWorld(), PlayerViewPointLocation, LineTraceEnd, 
-		FColor::Green, false, 0.f, 0, 5.f
+		GetWorld(), 
+		PlayerViewPointLocation,
+		LineTraceEnd, 
+		FColor::Green,
+		false,
+		0.f,
+		0, 
+		5.f
+	);
+
+	FHitResult Hit;
+	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
+
+	GetWorld()->LineTraceSingleByObjectType(
+		OUT Hit,
+		PlayerViewPointLocation,
+		LineTraceEnd,
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
+		TraceParams
 	);
 	
-	// UE_LOG(LogTemp, Warning, TEXT("ViewLocation: %s, ViewRotation: %s"), 
-	// 	*PlayerViewPointLocation.ToString(),
-	// 	*PlayerViewPointRotation.ToString()
-	// );
+	AActor* HitActor = Hit.GetActor();
+	if (HitActor)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Line Trace has hit: %s"), *HitActor->GetName());
+	}
+	
+ 
+	// UE_LOG(LogTemp, Warning, TEXt("Actor that is hit %s "), AActor* InActor.ToString);
 
 	// draw a line from player showing the reach
 	// ray-cast out to the certain distance (reach)
