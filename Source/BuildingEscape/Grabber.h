@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Components/ActorComponent.h"
 #include "Grabber.generated.h"
 
@@ -27,6 +28,9 @@ public:
 private:
 
 	UPROPERTY(EditAnywhere)
-	float GrabberLength = 2.f;
+	float GrabberLength = 100.f;
+
+	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+
 		
 };
