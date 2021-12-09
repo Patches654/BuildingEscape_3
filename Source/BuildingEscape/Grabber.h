@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+// #include "Components/InputComponent.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Components/ActorComponent.h"
 #include "Grabber.generated.h"
@@ -31,6 +32,11 @@ private:
 	float GrabberLength = 100.f;
 
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+
+	UInputComponent* InputComponent = nullptr;
+
+	void Grab();
+	void Release();
 
 		
 };
