@@ -8,8 +8,10 @@
 
 
 // Does nothing, but helps us read the code, regarding out perameters...
-#define OUT
-
+#define OUT 
+/* out perameteres are parameters that come out of a function call, you need to
+	create variables before the function call to store the out perameters
+*/
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -17,17 +19,19 @@ UGrabber::UGrabber()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
-
 
 // Called when the game starts
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
+	FindPhysicsHandle();
+	SetupInputComponent();
+}
 
-	// Check for the physics handle componant.
+// Check for the physics handle componant.
+void UGrabber::FindPhysicsHandle()
+{
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 	if (PhysicsHandle)
 	{
@@ -37,19 +41,26 @@ void UGrabber::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s has no physics handle component"), *GetOwner()->GetName());
 	}
+}
 
+// Gets the Input from the user... add more functionality here...
+void UGrabber::SetupInputComponent()
+{
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
 	if (InputComponent)
 	{
 		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
 		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
 		// IE is (I)nput(E)vent
+		// "this" means the thing that this c++ code is attached to, e.g. the player pawn
+		// &Ugrabber::Release means reference to the function release(); which is in the Ugrabber class... in storage type memory :: 
 	}
 }
 
 void UGrabber::Grab()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grabber Grab Press"));
+	GetFirstPhysicsBodyInReach();
 }
 
 void UGrabber::Release()
@@ -61,9 +72,10 @@ void UGrabber::Release()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
 
-	// get players viewpoint
-
+FHitResult UGrabber::GetFirstPhysicsBodyInReach() const
+{
 	// This is an out perameter, we create to a variable, the GetPlayerViewPoint, modifies the variables. 
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
@@ -74,19 +86,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	
 	// Creating the Vector, Converting the Rotation to a Vector and adding the two vectors together
 	FVector LineTraceEnd = PlayerViewPointLocation + (GrabberLength * PlayerViewPointRotation.Vector());
-
-	// Draw A debug line to check the resultant LineTraceEnd
-	DrawDebugLine(
-		GetWorld(), 
-		PlayerViewPointLocation,
-		LineTraceEnd, 
-		FColor::Green,
-		false,
-		0.f,
-		0, 
-		5.f
-	);
-
 	FHitResult Hit;
 	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
 
@@ -103,11 +102,5 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Line Trace has hit: %s"), *HitActor->GetName());
 	}
-	
- 
-	// UE_LOG(LogTemp, Warning, TEXt("Actor that is hit %s "), AActor* InActor.ToString);
-
-	// draw a line from player showing the reach
-	// ray-cast out to the certain distance (reach)
-	// see what it hits
+	return Hit;
 }
